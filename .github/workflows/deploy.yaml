@@ -36,7 +36,7 @@ jobs:
 
       # 2. Build Docker image (IMPORTANT: use correct folder)
       - name: Build Docker Image
-        run: docker build -t my-app ./test
+        run: docker build -t my-app .
 
       # 3. Run container
       - name: Run Container
