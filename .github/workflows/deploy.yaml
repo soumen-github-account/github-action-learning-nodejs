@@ -1,4 +1,24 @@
-name: CI/CD Pipeline
+# name: CI/CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Build Docker Image
+#         run: docker build -t my-app .
+
+#       - name: Run Container (test)
+#         run: docker run -d -p 8000:8000 my-app
+name: CI Pipeline
 
 on:
   push:
@@ -6,15 +26,36 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Build Docker image (IMPORTANT: use correct folder)
       - name: Build Docker Image
-        run: docker build -t my-app .
+        run: docker build -t my-app ./test
 
-      - name: Run Container (test)
-        run: docker run -d -p 8000:8000 my-app
+      # 3. Run container
+      - name: Run Container
+        run: docker run -d -p 8000:8000 --name my-container my-app
+
+      # 4. Wait for server to start
+      - name: Wait for app
+        run: sleep 5
+
+      # 5. Test API (THIS MAKES CI REAL)
+      - name: Test API
+        run: curl -f http://localhost:8000 || exit 1
+
+      # 6. Show logs if failed (very useful)
+      - name: Show container logs
+        if: failure()
+        run: docker logs my-container
+
+      # 7. Stop container (cleanup)
+      - name: Stop container
+        if: always()
+        run: docker stop my-container
