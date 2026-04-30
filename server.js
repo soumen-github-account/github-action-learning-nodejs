@@ -7,11 +7,11 @@ app.get('/', (req, res)=>{
     return res.json({msg: "Hello from the server"})
 })
 
-app.get("/", (req, res) => {
-  res.send(sdking); // ❌ undefined variable
-});
+// app.get("/", (req, res) => {
+//   res.send(Hell); // ❌ undefined variable
+// });
 
-// app.listen(PORT, ()=>{
-//     console.log(`server is running on port : ${PORT}`);
-// })
+app.listen(PORT, ()=>{
+    console.log(`server is running on port : ${PORT}`);
+})
 
